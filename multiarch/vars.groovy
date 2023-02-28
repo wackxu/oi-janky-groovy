@@ -116,7 +116,11 @@ def bashbrewBuildAndPush(context) {
 							if [ "$tagFrom" = 'scratch' ]; then
 								continue
 							fi
-							created="$(docker image inspect --format '{{ .Created }}' "$tagFrom")"
+							if [[ "$tagFrom" =~ ^$ACT_ON_IMAGE.* ]]; then
+								echo "xxxxxxxxxxxxxxxxx"
+								docker tag $tagFrom "${REGISTRY_ADDRESS}/library/$tagFrom" 2>/dev/null
+							fi
+							created="$(docker image inspect --format '{{ .Created }}' "${REGISTRY_ADDRESS}/library/$tagFrom")"
 							created="$(TZ=UTC date --date "$created" '+%s.%N')"
 							epoch="$(sort -n <<<$"$epoch\n$created" | tail -1)" # sort instead of [ -gt ] to support nanoseconds correctly
 						done
@@ -203,7 +207,7 @@ def bashbrewBuildAndPush(context) {
 				mkdir build-info/image-ids
 				for tag in ${TAGS:-}; do
 					for alias in $(bashbrew list "$tag"); do
-						docker image inspect --format '{{ .Id }}' "$TARGET_NAMESPACE/$tag" > "build-info/image-ids/${alias//:/_}.txt"
+						docker image inspect --format '{{ .Id }}' "${REGISTRY_ADDRESS}/$TARGET_NAMESPACE/$tag" > "build-info/image-ids/${alias//:/_}.txt"
 					done
 				done
 				echo "${TAGS:-}" | xargs -rn1 > build-info/success.txt
@@ -212,7 +216,7 @@ def bashbrewBuildAndPush(context) {
 			archiveArtifacts 'build-info/**'
 		}
 
-		context.withCredentials([string(credentialsId: 'dockerhub-public-proxy', variable: 'DOCKERHUB_PUBLIC_PROXY')]) {
+		// context.withCredentials([string(credentialsId: 'dockerhub-public-proxy', variable: 'DOCKERHUB_PUBLIC_PROXY')]) {
 			stage('Push') {
 				dryRun = sh(returnStdout: true, script: '''
 					bashbrew push --dry-run --target-namespace "$TARGET_NAMESPACE" $TAGS
@@ -237,7 +241,7 @@ def bashbrewBuildAndPush(context) {
 				}
 			}
 		}
-	}
+	//}
 	if (dryRun == '') {
 		// if we didn't need to push anything let's tell whoever invoked us that we didn't, so they scan skip other things too (triggering children, for example)
 		return 'skip'

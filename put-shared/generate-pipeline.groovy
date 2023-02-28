@@ -71,9 +71,9 @@ node {
 							scm {
 								git {
 									remote {
-										url('https://github.com/docker-library/oi-janky-groovy.git')
+										url('https://github.com/wackxu/oi-janky-groovy.git')
 									}
-									branch('*/master')
+									branch('*/test')
 									extensions {
 										cleanAfterCheckout()
 									}

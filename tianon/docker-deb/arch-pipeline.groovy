@@ -3,15 +3,15 @@
 // we can't use "load()" here because we don't have a file context (or a real checkout of "oi-janky-groovy" -- the pipeline plugin hides that checkout from the actual pipeline execution)
 def multiarchVars = fileLoader.fromGit(
 	'multiarch/vars.groovy', // script
-	'https://github.com/docker-library/oi-janky-groovy.git', // repo
-	'master', // branch
+	'https://github.com/wackxu/oi-janky-groovy.git', // repo
+	'test', // branch
 	null, // credentialsId
 	'', // node/label
 )
 def vars = fileLoader.fromGit(
 	'tianon/docker-deb/vars.groovy', // script
-	'https://github.com/docker-library/oi-janky-groovy.git', // repo
-	'master', // branch
+	'https://github.com/wackxu/oi-janky-groovy.git', // repo
+	'test', // branch
 	null, // credentialsId
 	'', // node/label
 )

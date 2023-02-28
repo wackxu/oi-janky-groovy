@@ -3,8 +3,8 @@
 // we can't use "load()" here because we don't have a file context (or a real checkout of "oi-janky-groovy" -- the pipeline plugin hides that checkout from the actual pipeline execution)
 def vars = fileLoader.fromGit(
 	'multiarch/vars.groovy', // script
-	'https://github.com/docker-library/oi-janky-groovy.git', // repo
-	'master', // branch
+	'https://github.com/wackxu/oi-janky-groovy.git', // repo
+	'test', // branch
 	null, // credentialsId
 	'', // node/label
 )
@@ -48,9 +48,9 @@ node('put-shared') {
 			scm: [
 				$class: 'GitSCM',
 				userRemoteConfigs: [[
-					url: 'https://github.com/docker-library/perl-bashbrew.git',
+					url: 'https://github.com/wackxu/perl-bashbrew.git',
 				]],
-				branches: [[name: '*/master']],
+				branches: [[name: '*/test']],
 				extensions: [
 					[
 						$class: 'CleanCheckout',
@@ -77,7 +77,7 @@ node('put-shared') {
 	)]) {
 		sh '''#!/usr/bin/env bash
 			set -Eeuo pipefail
-			docker login --username "$DOCKER_USERNAME" --password-stdin <<<"$DOCKER_PASSWORD"
+			docker login testhub.com --username "$DOCKER_USERNAME" --password-stdin <<<"$DOCKER_PASSWORD"
 		'''
 	}
 

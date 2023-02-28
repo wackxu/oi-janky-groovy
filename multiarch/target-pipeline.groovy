@@ -3,8 +3,8 @@
 // we can't use "load()" here because we don't have a file context (or a real checkout of "oi-janky-groovy" -- the pipeline plugin hides that checkout from the actual pipeline execution)
 def vars = fileLoader.fromGit(
 	'multiarch/vars.groovy', // script
-	'https://github.com/docker-library/oi-janky-groovy.git', // repo
-	'master', // branch
+	'https://github.com/wackxu/oi-janky-groovy.git', // repo
+	'test', // branch
 	null, // credentialsId
 	'', // node/label
 )
@@ -15,6 +15,7 @@ env.ACT_ON_ARCH = env.JOB_NAME.split('/')[-2] // "i386", etc
 env.TARGET_NAMESPACE = vars.archNamespace(env.ACT_ON_ARCH)
 // we'll pull images explicitly -- we don't want it to ever happen _implicitly_ (since the architecture will be wrong if it does)
 env.BASHBREW_PULL = 'never'
+env.BASHBREW_DEBUG = 'true'
 
 node(vars.node(env.ACT_ON_ARCH, env.ACT_ON_IMAGE)) {
 	env.BASHBREW_LIBRARY = env.WORKSPACE + '/oi/library'
@@ -91,7 +92,7 @@ node(vars.node(env.ACT_ON_ARCH, env.ACT_ON_IMAGE)) {
 								;;
 						esac
 
-						parentImageIdLocal="$(docker image inspect --format '{{ .Id }}' "$parent" 2>/dev/null || :)"
+						parentImageIdLocal="$(docker image inspect --format '{{ .Id }}' "${REGISTRY_ADDRESS}/library/$parent" 2>/dev/null || :)"
 						if [ -z "$parentImageIdLocal" ]; then
 							# we don't have it at all; pull it
 							parentsToPull+=( "$parent" )
@@ -99,7 +100,7 @@ node(vars.node(env.ACT_ON_ARCH, env.ACT_ON_IMAGE)) {
 						fi
 
 						parentRepo="${parent%%:*}"
-						parentImageId="$(wget -qO- "https://doi-janky.infosiftr.net/job/multiarch/job/$ACT_ON_ARCH/job/$parentRepo/lastSuccessfulBuild/artifact/build-info/image-ids/${parent//:/_}.txt" 2>/dev/null || :)"
+						parentImageId="$(wget -qO- "https://${JENKINS_ADDRESS}/job/multiarch/job/$ACT_ON_ARCH/job/$parentRepo/lastSuccessfulBuild/artifact/build-info/image-ids/${parent//:/_}.txt" 2>/dev/null || :)"
 						if [ -z "$parentImageId" ]; then
 							# we can't tell if it's fresh; pull it
 							parentsToPull+=( "$parent" )
@@ -125,8 +126,8 @@ node(vars.node(env.ACT_ON_ARCH, env.ACT_ON_IMAGE)) {
 									# we cannot "docker tag ... foo@sha256:xxx" 😅 (but BuildKit can handle them just fine in "--build-context" and the eventual https://github.com/moby/buildkit/pull/3332 👀)
 									"docker pull \\(.[0] | @sh)"
 								else
-									"docker pull \\(.[1] | @sh)",
-									"docker tag \\(.[1] | @sh) \\(.[0] | @sh)"
+									"docker pull ${REGISTRY_ADDRESS}/\\(.[1] | @sh)",
+									"docker tag ${REGISTRY_ADDRESS}/\\(.[1] | @sh) ${REGISTRY_ADDRESS}/library/\\(.[0] | @sh)"
 								end
 							]
 							| join(" && ") + " || :" # fail loudly, but not fatally

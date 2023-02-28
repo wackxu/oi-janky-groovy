@@ -11,10 +11,10 @@ node('built-in') {
 		checkout([
 			$class: 'GitSCM',
 			userRemoteConfigs: [
-				[url: 'https://github.com/docker-library/oi-janky-groovy.git'],
+				[url: 'https://github.com/wackxu/oi-janky-groovy.git'],
 			],
 			branches: [
-				[name: '*/master'],
+				[name: '*/test'],
 			],
 			extensions: [
 				[
