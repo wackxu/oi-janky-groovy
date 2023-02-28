@@ -42,9 +42,9 @@ lock(label: 'repo-info-local', quantity: 1) { node('repo-info-local') {
 			scm: [
 				$class: 'GitSCM',
 				userRemoteConfigs: [[
-					url: 'https://github.com/docker-library/official-images.git',
+					url: 'https://github.com/wackxu/official-images.git',
 				]],
-				branches: [[name: '*/master']],
+				branches: [[name: '*/test']],
 				extensions: [
 					[
 						$class: 'CleanCheckout',

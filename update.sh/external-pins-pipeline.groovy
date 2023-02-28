@@ -26,7 +26,7 @@ node {
 				userRemoteConfigs: [
 					[
 						name: 'origin',
-						url: 'https://github.com/docker-library/official-images.git',
+						url: 'https://github.com/wackxu/official-images.git',
 					],
 					[
 						name: 'fork',
@@ -34,7 +34,7 @@ node {
 						credentialsId: 'docker-library-bot',
 					],
 				],
-				branches: [[name: 'origin/master']],
+				branches: [[name: 'origin/test']],
 				extensions: [
 					[
 						$class: 'CleanCheckout',

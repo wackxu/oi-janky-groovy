@@ -60,9 +60,9 @@ node(vars.docsNode(env.ACT_ON_ARCH, 'docs')) {
 			scm: [
 				$class: 'GitSCM',
 				userRemoteConfigs: [[
-					url: 'https://github.com/docker-library/official-images.git',
+					url: 'https://github.com/wackxu/official-images.git',
 				]],
-				branches: [[name: '*/master']],
+				branches: [[name: '*/test']],
 				extensions: [
 					[
 						$class: 'RelativeTargetDirectory',
