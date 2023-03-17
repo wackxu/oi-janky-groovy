@@ -54,7 +54,7 @@ node(vars.node(env.ACT_ON_ARCH, 'trigger')) {
 		if (0 != sh(returnStatus: true, script: '''#!/usr/bin/env bash
 			set -Eeuo pipefail
 			set -x
-			commit="$(wget -qO- "https://doi-janky.infosiftr.net/job/multiarch/job/$ACT_ON_ARCH/job/$REPO/lastSuccessfulBuild/artifact/build-info/commit.txt")"
+			commit="$(wget -qO- "http://${JENKINS_ADDRESS}/job/multiarch/job/$ACT_ON_ARCH/job/$REPO/lastSuccessfulBuild/artifact/build-info/commit.txt")"
 			[ -n "$commit" ]
 			touchingCommits="$(git -C "$BASHBREW_LIBRARY" log --oneline "$commit...HEAD" -- "$REPO")"
 			[ -z "$touchingCommits" ]

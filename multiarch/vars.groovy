@@ -6,12 +6,12 @@ archesMeta = [
 	['arm32v6', [:]],
 	['arm32v7', [:]],
 	['arm64v8', [:]],
-	['i386', [:]],
-	['mips64le', [:]],
-	['ppc64le', [:]],
-	['riscv64', [:]],
-	['s390x', [:]],
-	['windows-amd64', [:]],
+	// ['i386', [:]],
+	// ['mips64le', [:]],
+	// ['ppc64le', [:]],
+	// ['riscv64', [:]],
+	// ['s390x', [:]],
+	// ['windows-amd64', [:]],
 ]
 dpkgArches = [
 	'amd64': 'amd64',
@@ -19,11 +19,11 @@ dpkgArches = [
 	'arm32v6': 'armhf', // Raspberry Pi, making life hard...
 	'arm32v7': 'armhf',
 	'arm64v8': 'arm64',
-	'i386': 'i386',
-	'mips64le': 'mips64el',
-	'ppc64le': 'ppc64el',
-	'riscv64': 'riscv64',
-	's390x': 's390x',
+	// 'i386': 'i386',
+	// 'mips64le': 'mips64el',
+	// 'ppc64le': 'ppc64el',
+	// 'riscv64': 'riscv64',
+	// 's390x': 's390x',
 ]
 
 // list of arches
@@ -117,7 +117,6 @@ def bashbrewBuildAndPush(context) {
 								continue
 							fi
 							if [[ "$tagFrom" =~ ^$ACT_ON_IMAGE.* ]]; then
-								echo "xxxxxxxxxxxxxxxxx"
 								docker tag $tagFrom "${REGISTRY_ADDRESS}/library/$tagFrom" 2>/dev/null
 							fi
 							created="$(docker image inspect --format '{{ .Created }}' "${REGISTRY_ADDRESS}/library/$tagFrom")"

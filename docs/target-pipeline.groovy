@@ -37,11 +37,11 @@ node(vars.docsNode(env.ACT_ON_ARCH, 'docs')) {
 			scm: [
 				$class: 'GitSCM',
 				userRemoteConfigs: [[
-					url: 'git@github.com:docker-library/docs.git',
+					url: 'git@github.com:wackxu/docs.git',
 					credentialsId: 'docker-library-bot',
 					name: 'origin',
 				]],
-				branches: [[name: '*/master']],
+				branches: [[name: '*/test']],
 				extensions: [
 					[
 						$class: 'CleanCheckout',
